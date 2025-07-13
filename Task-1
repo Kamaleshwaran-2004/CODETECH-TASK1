@@ -1,0 +1,57 @@
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public class FileOperations {
+
+    static final String FILE_NAME = "sample.txt";
+
+    public static void main(String[] args) {
+        try {
+            // 1. Write to file
+            writeToFile("Hello World!\nJava file operations demo.\nWelcome to file editing.");
+
+            // 2. Read from file
+            System.out.println("Original File Content:");
+            readFromFile();
+
+            // 3. Modify file: Replace "World" with "Universe"
+            modifyFile("World", "Universe");
+
+            // 4. Read after modification
+            System.out.println("\nModified File Content:");
+            readFromFile();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Write text to file
+    public static void writeToFile(String content) throws IOException {
+        Files.write(Paths.get(FILE_NAME), content.getBytes());
+        System.out.println("File written successfully.");
+    }
+
+    // Read and print file contents
+    public static void readFromFile() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(FILE_NAME));
+        for (String line : lines) {
+            System.out.println(line);
+        }
+    }
+
+    // Modify file by replacing target with replacement
+    public static void modifyFile(String target, String replacement) throws IOException {
+        Path path = Paths.get(FILE_NAME);
+        List<String> lines = Files.readAllLines(path);
+        List<String> modifiedLines = new ArrayList<>();
+
+        for (String line : lines) {
+            modifiedLines.add(line.replaceAll(target, replacement));
+        }
+
+        Files.write(path, modifiedLines);
+        System.out.println("File modified successfully.");
+    }
+}
