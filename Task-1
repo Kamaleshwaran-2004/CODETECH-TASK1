@@ -1,57 +1,106 @@
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 
 public class FileOperations {
 
-    static final String FILE_NAME = "sample.txt";
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        try {
-            // 1. Write to file
-            writeToFile("Hello World!\nJava file operations demo.\nWelcome to file editing.");
+        String filename = "example.txt";
+        while (true) {
+            System.out.println("\n==== File Operations Menu ====");
+            System.out.println("1. Write to File");
+            System.out.println("2. Read from File");
+            System.out.println("3. Modify File");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-            // 2. Read from file
-            System.out.println("Original File Content:");
-            readFromFile();
+            switch (choice) {
+                case 1:
+                    writeToFile(filename);
+                    break;
+                case 2:
+                    readFromFile(filename);
+                    break;
+                case 3:
+                    modifyFile(filename);
+                    break;
+                case 4:
+                    System.out.println("Exiting program.");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
 
-            // 3. Modify file: Replace "World" with "Universe"
-            modifyFile("World", "Universe");
+    
+    private static void writeToFile(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            System.out.println("Enter text to write (type 'exit' to finish):");
+            String line;
+            while (!(line = scanner.nextLine()).equalsIgnoreCase("exit")) {
+                writer.write(line);
+                writer.newLine();
+            }
+            System.out.println("File written successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
+    }
 
-            // 4. Read after modification
-            System.out.println("\nModified File Content:");
-            readFromFile();
+    
+    private static void readFromFile(String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            System.out.println("\n--- File Content ---");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            System.out.println("---------------------");
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + e.getMessage());
+        }
+    }
+
+    
+    private static void modifyFile(String filename) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            System.out.println("\n--- Current File Content ---");
+            for (int i = 0; i < lines.size(); i++) {
+                System.out.println((i + 1) + ": " + lines.get(i));
+            }
+
+            System.out.print("Enter line number to modify: ");
+            int lineNumber = scanner.nextInt();
+            scanner.nextLine(); // clear buffer
+            if (lineNumber < 1 || lineNumber > lines.size()) {
+                System.out.println("Invalid line number.");
+                return;
+            }
+
+            System.out.print("Enter new content: ");
+            String newContent = scanner.nextLine();
+            lines.set(lineNumber - 1, newContent);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                for (String l : lines) {
+                    writer.write(l);
+                    writer.newLine();
+                }
+                System.out.println("File modified successfully.");
+            }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error modifying file: " + e.getMessage());
         }
-    }
-
-    // Write text to file
-    public static void writeToFile(String content) throws IOException {
-        Files.write(Paths.get(FILE_NAME), content.getBytes());
-        System.out.println("File written successfully.");
-    }
-
-    // Read and print file contents
-    public static void readFromFile() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(FILE_NAME));
-        for (String line : lines) {
-            System.out.println(line);
-        }
-    }
-
-    // Modify file by replacing target with replacement
-    public static void modifyFile(String target, String replacement) throws IOException {
-        Path path = Paths.get(FILE_NAME);
-        List<String> lines = Files.readAllLines(path);
-        List<String> modifiedLines = new ArrayList<>();
-
-        for (String line : lines) {
-            modifiedLines.add(line.replaceAll(target, replacement));
-        }
-
-        Files.write(path, modifiedLines);
-        System.out.println("File modified successfully.");
     }
 }
