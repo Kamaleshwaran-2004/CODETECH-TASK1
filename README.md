@@ -36,3 +36,59 @@ Rewrites the entire file with the updated content.
 Exit
 Safely ends the program.
 
+
+
+SAMPLE OUTPUT:
+==== File Operations Menu ====
+
+1. Write to File
+   
+3. Read from File
+   
+5. Modify File
+   
+7. Exit
+Choose an option: 1
+Enter text to write (type 'exit' to finish):
+Hello World
+This is a test file.
+exit
+File written successfully.
+
+==== File Operations Menu ====
+Choose an option: 2
+
+--- File Content ---
+
+Hello World
+
+This is a test file.
+---------------------
+
+==== File Operations Menu ====
+
+Choose an option: 3
+
+--- Current File Content ---
+
+1: Hello World
+
+2: This is a test file.
+
+Enter line number to modify: 2
+
+Enter new content: This is a modified line.
+
+File modified successfully.
+
+==== File Operations Menu ====
+
+Choose an option: 2
+
+--- File Content ---
+
+Hello World
+
+This is a modified line.
+---------------------
+
